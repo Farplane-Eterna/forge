@@ -9,6 +9,8 @@ import forge.game.mana.Mana;
 import forge.game.phase.PhaseHandler;
 import forge.game.player.Player;
 import forge.game.player.RegisteredPlayer;
+import forge.game.cost.CrystalElement;
+import forge.game.cost.CrystalPool;
 import forge.game.spellability.SpellAbility;
 import forge.game.spellability.SpellAbilityStackInstance;
 import forge.game.trigger.TriggerType;
@@ -186,6 +188,8 @@ public class GameSnapshot {
 
         // Copy mana pool
         copyManaPool(origPlayer, newPlayer);
+        // Copy crystal pool
+        copyCrystalPool(origPlayer, newPlayer);
     }
 
     private void copyManaPool(Player fromPlayer, Player toPlayer) {
@@ -195,6 +199,17 @@ public class GameSnapshot {
             toPlayer.getManaPool().addMana(copyMana(m, toGame), false);
         }
         toPlayer.updateManaForView();
+    }
+
+    private void copyCrystalPool(Player fromPlayer, Player toPlayer) {
+        toPlayer.getCrystal().empty();
+        CrystalPool copy = fromPlayer.getCrystal().copy();
+        for (CrystalElement el : CrystalElement.values()) {
+            int amt = copy.get(el);
+            if (amt > 0) {
+                toPlayer.getCrystal().add(el, amt);
+            }
+        }
     }
 
     private Mana copyMana(Mana m, Game toGame) {

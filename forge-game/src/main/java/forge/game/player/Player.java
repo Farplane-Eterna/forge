@@ -36,6 +36,7 @@ import forge.game.event.*;
 import forge.game.keyword.*;
 import forge.game.keyword.KeywordCollection.KeywordCollectionView;
 import forge.game.mana.ManaPool;
+import forge.game.cost.CrystalPool;
 import forge.game.phase.PhaseHandler;
 import forge.game.phase.PhaseType;
 import forge.game.replacement.ReplacementEffect;
@@ -180,6 +181,7 @@ public class Player extends GameEntity implements Comparable<Player> {
     private CardCollection gainedOwnership = new CardCollection();
 
     private ManaPool manaPool = new ManaPool(this);
+    private CrystalPool crystal = new CrystalPool();
     // The SA currently being paid for
     private Deque<SpellAbility> paidForStack = new ArrayDeque<>();
 
@@ -1797,6 +1799,14 @@ public class Player extends GameEntity implements Comparable<Player> {
 
     public final ManaPool getManaPool() {
         return manaPool;
+    }
+
+    public final CrystalPool getCrystal() {
+        return crystal;
+    }
+
+    public final void setCrystal(CrystalPool pool) {
+        this.crystal = pool == null ? new CrystalPool() : pool.copy();
     }
     public void updateManaForView() {
         view.updateMana(this);
