@@ -18,6 +18,7 @@ import forge.game.mana.Mana;
 import forge.game.phase.PhaseHandler;
 import forge.game.phase.PhaseType;
 import forge.game.player.Player;
+import forge.game.cost.CrystalElement;
 import forge.game.player.RegisteredPlayer;
 import forge.game.spellability.SpellAbility;
 import forge.game.spellability.SpellAbilityStackInstance;
@@ -110,6 +111,12 @@ public class GameCopier {
             // TODO creatureAttackedThisTurn
             for (Mana m : origPlayer.getManaPool()) {
                 newPlayer.getManaPool().addMana(m, false);
+            }
+            for (CrystalElement el : CrystalElement.values()) {
+                int amt = origPlayer.getCrystal().get(el);
+                if (amt > 0) {
+                    newPlayer.getCrystal().add(el, amt);
+                }
             }
             playerMap.put(origPlayer, newPlayer);
         }
