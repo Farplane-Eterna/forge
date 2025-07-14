@@ -37,6 +37,7 @@ import forge.game.keyword.*;
 import forge.game.keyword.KeywordCollection.KeywordCollectionView;
 import forge.game.mana.ManaPool;
 import forge.game.cost.CrystalPool;
+import forge.game.cost.CrystalElement;
 import forge.game.phase.PhaseHandler;
 import forge.game.phase.PhaseType;
 import forge.game.replacement.ReplacementEffect;
@@ -1481,6 +1482,10 @@ public class Player extends GameEntity implements Comparable<Player> {
 
         newCard.setDiscarded(true);
 
+        // FFTCG: discarding a card generates two Crystal Points for its owner
+        // TODO map card to proper element once FFTCG card data is available
+        addCrystal(CrystalElement.FIRE, 2);
+
         if (sa != null && sa.hasParam("RememberDiscarded")) {
             sa.getHostCard().addRemembered(newCard);
         }
@@ -1807,6 +1812,18 @@ public class Player extends GameEntity implements Comparable<Player> {
 
     public final void setCrystal(CrystalPool pool) {
         this.crystal = pool == null ? new CrystalPool() : pool.copy();
+    }
+
+    /**
+     * Adds Crystal Points to this player.
+     *
+     * @param element
+     *            element of the crystals
+     * @param amount
+     *            amount to add
+     */
+    public final void addCrystal(CrystalElement element, int amount) {
+        this.crystal.add(element, amount);
     }
     public void updateManaForView() {
         view.updateMana(this);

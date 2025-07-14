@@ -36,6 +36,7 @@ import forge.game.ability.SpellAbilityEffect;
 import forge.game.combat.Combat;
 import forge.game.combat.CombatLki;
 import forge.game.cost.Cost;
+import forge.game.cost.CrystalElement;
 import forge.game.event.*;
 import forge.game.event.GameEventCardDamaged.DamageType;
 import forge.game.keyword.*;
@@ -4908,6 +4909,12 @@ public class Card extends GameEntity implements Comparable<Card>, IHasSVars, ITr
         setTapped(true);
         view.updateNeedsTapAnimation(tapAnimation);
         getGame().fireEvent(new GameEventCardTapped(this, true));
+
+        // FFTCG: tapping a Backup permanent grants its controller 1 Crystal Point
+        // TODO derive element from card properties when available
+        if (isFftcgBackup()) {
+            tapper.addCrystal(CrystalElement.FIRE, 1);
+        }
         return true;
     }
 
@@ -5770,6 +5777,13 @@ public class Card extends GameEntity implements Comparable<Card>, IHasSVars, ITr
     public final boolean isPlane()      { return getType().isPlane(); }
 
     public final boolean isOutlaw()     { return getType().isOutlaw(); }
+
+    /**
+     * Checks if this card is a FFTCG Backup permanent.
+     *
+     * @return true if it has the Backup subtype
+     */
+    public final boolean isFftcgBackup() { return getType().hasSubtype("Backup"); }
 
     public final boolean isRoom()       { return getType().hasSubtype("Room"); }
 
