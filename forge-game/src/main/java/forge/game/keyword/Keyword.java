@@ -76,6 +76,8 @@ public enum Keyword {
     EVOKE("Evoke", KeywordWithCost.class, false, "You may cast this spell for its evoke cost. If you do, it's sacrificed when it enters."),
     EVOLVE("Evolve", SimpleKeyword.class, false, "Whenever a creature you control enters, if that creature has greater power or toughness than this creature, put a +1/+1 counter on this creature."),
     EXALTED("Exalted", SimpleKeyword.class, false, "Whenever a creature you control attacks alone, that creature gets +1/+1 until end of turn."),
+    EX_BURST("EX Burst", SimpleKeyword.class, false,
+            "When this card is placed into your damage zone from your deck, you may resolve its EX Burst effect."),
     EXPLOIT("Exploit", SimpleKeyword.class, false, "When this creature enters, you may sacrifice a creature."),
     EXTORT("Extort", SimpleKeyword.class, false, "Whenever you cast a spell, you may pay {W/B}. If you do, each opponent loses 1 life and you gain that much life."),
     FABRICATE("Fabricate", KeywordWithAmount.class, false, "When this creature enters, put {%1$d:+1/+1 counter} on it, or create {%1$d:1/1 colorless Servo artifact creature token}."),

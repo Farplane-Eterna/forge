@@ -53,18 +53,15 @@ public class CrystalPool {
     }
 
     /**
-     * Checks if this pool can pay provided cost pool.
+     * Checks if this pool can pay provided cost pool. Crystal Points of any
+     * element can be used to cover missing elements if the total amount is
+     * sufficient.
      *
      * @param costPool the cost to check
      * @return true if enough crystals are present
      */
     public boolean canPay(CrystalPool costPool) {
-        for (Map.Entry<CrystalElement, Integer> e : costPool.amounts.entrySet()) {
-            if (get(e.getKey()) < e.getValue()) {
-                return false;
-            }
-        }
-        return true;
+        return total() >= costPool.total();
     }
 
     /**
@@ -77,13 +74,47 @@ public class CrystalPool {
         if (!canPay(costPool)) {
             return false;
         }
+
+        // First use matching elements
+        int remaining = costPool.total();
         for (Map.Entry<CrystalElement, Integer> e : costPool.amounts.entrySet()) {
-            amounts.merge(e.getKey(), -e.getValue(), Integer::sum);
-            if (amounts.get(e.getKey()) <= 0) {
-                amounts.remove(e.getKey());
+            int use = Math.min(get(e.getKey()), e.getValue());
+            if (use > 0) {
+                amounts.merge(e.getKey(), -use, Integer::sum);
+                if (amounts.get(e.getKey()) <= 0) {
+                    amounts.remove(e.getKey());
+                }
+                remaining -= use;
             }
         }
+
+        // Pay any remaining cost from other elements
+        if (remaining > 0) {
+            for (Map.Entry<CrystalElement, Integer> e : amounts.entrySet()) {
+                if (remaining <= 0) {
+                    break;
+                }
+                int use = Math.min(e.getValue(), remaining);
+                e.setValue(e.getValue() - use);
+                remaining -= use;
+            }
+            amounts.entrySet().removeIf(entry -> entry.getValue() <= 0);
+        }
+
         return true;
+    }
+
+    /**
+     * Total amount of Crystal Points in this pool.
+     *
+     * @return sum of all elements
+     */
+    public int total() {
+        int sum = 0;
+        for (int v : amounts.values()) {
+            sum += v;
+        }
+        return sum;
     }
 
     /**

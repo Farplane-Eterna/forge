@@ -35,4 +35,18 @@ public class CrystalPoolTest {
         assertEquals(1, copy.get(CrystalElement.EARTH));
         assertEquals(0, copy.get(CrystalElement.ICE));
     }
+
+    @Test
+    public void testPayWithMismatchedElements() {
+        CrystalPool pool = new CrystalPool();
+        pool.add(CrystalElement.FIRE, 1);
+        pool.add(CrystalElement.WATER, 2);
+
+        CrystalPool cost = new CrystalPool();
+        cost.add(CrystalElement.EARTH, 2);
+
+        assertTrue(pool.canPay(cost));
+        assertTrue(pool.pay(cost));
+        assertEquals(1, pool.total());
+    }
 }

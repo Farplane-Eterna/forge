@@ -18,6 +18,10 @@ public enum ZoneType {
     Flashback(false, "lblFlashbackZone"),
     Command(false, "lblCommandZone"),
     Stack(false, "lblStackZone"),
+    // FFTCG specific zones
+    FORWARD_ROW(false, "lblForwardRowZone"),
+    BACKUP_ROW(false, "lblBackupRowZone"),
+    DAMAGE(false, "lblDamageZone"),
     Sideboard(true, "lblSideboardZone"),
     Ante(false, "lblAnteZone"),
     Merged(false, "lblBattlefieldZone"),
