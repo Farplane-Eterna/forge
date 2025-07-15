@@ -329,6 +329,10 @@ public class Cost implements Serializable {
             final String[] splitStr = abCostParse(parse, 1);
             return new CostPayShards(splitStr[0]);
         }
+        if (parse.startsWith("PayCrystal<")) {
+            final String[] splitStr = abCostParse(parse, 1);
+            return new CostPayCrystal(splitStr[0]);
+        }
 
         if (parse.startsWith("GainLife<")) {
             // PayLife<LifeCost>

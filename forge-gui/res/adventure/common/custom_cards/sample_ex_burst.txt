@@ -1,0 +1,7 @@
+Name:Sample EX Burst
+ManaCost:no cost
+Types:Spell
+Keywords:EX Burst
+T:Mode$ ChangesZone | Origin$ Library | Destination$ Damage | ValidCard$ Card.Self | OptionalDecider$ You | Execute$ DBEffect | TriggerDescription$ EX Burst - You may draw a card.
+SVar:DBEffect:DB$ Draw | Defined$ You | NumCards$ 1
+Oracle:EX BURST When this card is put from your deck into your damage zone, you may draw a card.

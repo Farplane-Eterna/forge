@@ -834,6 +834,11 @@ public class AiCostDecision extends CostDecisionMakerBase {
     }
 
     @Override
+    public PaymentDecision visit(CostPayCrystal cost) {
+        return PaymentDecision.number(0);
+    }
+
+    @Override
     public PaymentDecision visit(CostUnattach cost) {
         final CardCollection cardToUnattach = cost.findCardToUnattach(source, player, ability);
         if (cardToUnattach.isEmpty()) {

@@ -39,6 +39,7 @@ public interface ICostVisitor<T> {
     T visit(CostUnattach cost);
     T visit(CostTapType cost);
     T visit(CostPayShards cost);
+    T visit(CostPayCrystal cost);
 
     class Base<T> implements ICostVisitor<T> {
 
@@ -223,6 +224,11 @@ public interface ICostVisitor<T> {
 
         @Override
         public T visit(CostPayShards cost) {
+            return null;
+        }
+
+        @Override
+        public T visit(CostPayCrystal cost) {
             return null;
         }
     }

@@ -703,6 +703,18 @@ public class HumanCostDecision extends CostDecisionMakerBase {
     }
 
     @Override
+    public PaymentDecision visit(final CostPayCrystal cost) {
+        int c = cost.getMaxAmountX(ability, player, false);
+        CrystalPool needed = new CrystalPool();
+        needed.add(CrystalElement.FIRE, c);
+        if (player.canPayCrystal(needed) &&
+                confirmAction(cost, "Pay " + c + " Crystal Points")) {
+            return PaymentDecision.number(c);
+        }
+        return null;
+    }
+
+    @Override
     public PaymentDecision visit(final CostPartMana cost) {
         // only interactive payment possible for now =(
         return new PaymentDecision(0);

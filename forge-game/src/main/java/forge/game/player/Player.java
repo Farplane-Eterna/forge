@@ -37,6 +37,7 @@ import forge.game.keyword.*;
 import forge.game.keyword.KeywordCollection.KeywordCollectionView;
 import forge.game.mana.ManaPool;
 import forge.game.cost.CrystalPool;
+import forge.game.cost.CrystalElement;
 import forge.game.phase.PhaseHandler;
 import forge.game.phase.PhaseType;
 import forge.game.replacement.ReplacementEffect;
@@ -75,10 +76,26 @@ import java.util.stream.Collectors;
  * @version $Id$
  */
 public class Player extends GameEntity implements Comparable<Player> {
-    public static final List<ZoneType> ALL_ZONES = Collections.unmodifiableList(Arrays.asList(ZoneType.Battlefield,
-            ZoneType.Library, ZoneType.Graveyard, ZoneType.Hand, ZoneType.Exile, ZoneType.Command, ZoneType.Ante,
-            ZoneType.Sideboard, ZoneType.PlanarDeck, ZoneType.SchemeDeck, ZoneType.AttractionDeck, ZoneType.ContraptionDeck,
-            ZoneType.Junkyard, ZoneType.Merged, ZoneType.Subgame, ZoneType.None));
+    public static final List<ZoneType> ALL_ZONES = Collections.unmodifiableList(Arrays.asList(
+            ZoneType.Battlefield,
+            ZoneType.FORWARD_ROW,
+            ZoneType.BACKUP_ROW,
+            ZoneType.DAMAGE,
+            ZoneType.Library,
+            ZoneType.Graveyard,
+            ZoneType.Hand,
+            ZoneType.Exile,
+            ZoneType.Command,
+            ZoneType.Ante,
+            ZoneType.Sideboard,
+            ZoneType.PlanarDeck,
+            ZoneType.SchemeDeck,
+            ZoneType.AttractionDeck,
+            ZoneType.ContraptionDeck,
+            ZoneType.Junkyard,
+            ZoneType.Merged,
+            ZoneType.Subgame,
+            ZoneType.None));
 
     private int life = 20;
     private int startingLife = 20;
@@ -1481,6 +1498,10 @@ public class Player extends GameEntity implements Comparable<Player> {
 
         newCard.setDiscarded(true);
 
+        // FFTCG: discarding a card generates two Crystal Points for its owner
+        // TODO map card to proper element once FFTCG card data is available
+        addCrystal(CrystalElement.FIRE, 2);
+
         if (sa != null && sa.hasParam("RememberDiscarded")) {
             sa.getHostCard().addRemembered(newCard);
         }
@@ -1807,6 +1828,49 @@ public class Player extends GameEntity implements Comparable<Player> {
 
     public final void setCrystal(CrystalPool pool) {
         this.crystal = pool == null ? new CrystalPool() : pool.copy();
+    }
+
+    /**
+     * Adds Crystal Points to this player.
+     *
+     * @param element
+     *            element of the crystals
+     * @param amount
+     *            amount to add
+     */
+    public final void addCrystal(CrystalElement element, int amount) {
+        this.crystal.add(element, amount);
+    }
+
+    /**
+     * Checks if this player can pay the given crystal cost.
+     *
+     * @param cost
+     *            crystal cost
+     * @return true if the cost can be paid
+     */
+    public final boolean canPayCrystal(CrystalPool cost) {
+        return crystal.canPay(cost);
+    }
+
+    /**
+     * Pays the given crystal cost, removing crystals from the pool.
+     *
+     * @param cost
+     *            crystal cost
+     * @return true if payment succeeded
+     */
+    public final boolean payCrystal(CrystalPool cost) {
+        return crystal.pay(cost);
+    }
+
+    /**
+     * Total Crystal Points this player currently controls.
+     *
+     * @return total number of crystals
+     */
+    public final int getTotalCrystals() {
+        return crystal.total();
     }
     public void updateManaForView() {
         view.updateMana(this);
