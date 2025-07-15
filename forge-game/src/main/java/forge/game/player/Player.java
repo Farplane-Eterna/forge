@@ -1841,37 +1841,6 @@ public class Player extends GameEntity implements Comparable<Player> {
     public final void addCrystal(CrystalElement element, int amount) {
         this.crystal.add(element, amount);
     }
-
-    /**
-     * Checks if this player can pay the given crystal cost.
-     *
-     * @param cost
-     *            crystal cost
-     * @return true if the cost can be paid
-     */
-    public final boolean canPayCrystal(CrystalPool cost) {
-        return crystal.canPay(cost);
-    }
-
-    /**
-     * Pays the given crystal cost, removing crystals from the pool.
-     *
-     * @param cost
-     *            crystal cost
-     * @return true if payment succeeded
-     */
-    public final boolean payCrystal(CrystalPool cost) {
-        return crystal.pay(cost);
-    }
-
-    /**
-     * Total Crystal Points this player currently controls.
-     *
-     * @return total number of crystals
-     */
-    public final int getTotalCrystals() {
-        return crystal.total();
-    }
     public void updateManaForView() {
         view.updateMana(this);
     }
